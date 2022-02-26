@@ -56,7 +56,9 @@ public class MyLemonadeRLAgent extends AbsAgent implements IAgent {
 			// Create a state representation of the lemonade game.
 			
 			// Don't forget to change NUM_POSSIBLE_STATES!
-			
+			int play1 = 0;
+			int play2 = 0;
+			int bestPlay;
 			// feel free to use these lists for move history.
 			// if you want to look back multiple moves, please make sure you don't go out-of-bounds.
 			List<Integer> myActions = this.getMyActions();
@@ -64,9 +66,19 @@ public class MyLemonadeRLAgent extends AbsAgent implements IAgent {
 			List<Integer> opponent2Actions = this.getOpponentActions(1);
 			List<Double> myRewards = this.getMyRewards();
 			List<Integer> myStates = this.getMyStates();
-			
+			switch (myActions.size()) {
+				case 0:
+					return 0;
+				case 1:
+					play1 = ((opponent1Actions.get(0) + opponent2Actions.get(0)) / 2) % 12;
+					play2 = (play1 + 6) % 12;
+					bestPlay = (Math.abs(play1 - opponent1Actions.get(0)) > Math.abs(play2 - opponent1Actions.get(0)) ? play1 : play2);
+				case 2:
+
+				default:
+			}
 			// ...
-			return 0;
+
 		}
 		
 		public void train() {
