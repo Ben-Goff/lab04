@@ -78,7 +78,7 @@ public class MyLemonadeRLAgent extends AbsAgent implements IAgent {
 				default:
 			}
 			// ...
-
+			return 1;
 		}
 		
 		public void train() {

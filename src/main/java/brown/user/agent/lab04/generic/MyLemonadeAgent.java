@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import brown.auction.rules.utility.LemonadeUtility;
 import brown.communication.action.IGameAction;
@@ -29,7 +30,7 @@ import brown.user.agent.library.offline.OfflineGame;
 import brown.user.agent.library.offline.OfflineStagHunt;
 
 public class MyLemonadeAgent extends AbsAgent implements IAgent {
-	public static final String NAME = ""; // TODO: name your agent
+	public static final String NAME = "DANNY"; // TODO: name your agent
 	
 	private List<Integer> myActions;
 	private List<Double> myRewards;
@@ -52,16 +53,41 @@ public class MyLemonadeAgent extends AbsAgent implements IAgent {
 		// TODO:
 		// implement your strategy for the lemonade game, returning an action
 		// between 0 and 11, inclusive.
-		
-		// feel free to use these lists for move history.
-		// if you want to look back multiple moves, please make sure you don't go out-of-bounds.
 		List<Integer> myActions = this.getMyActions();
 		List<Integer> opponent1Actions = this.getOpponentActions(0);
 		List<Integer> opponent2Actions = this.getOpponentActions(1);
 		List<Double> myRewards = this.getMyRewards();
-		
-		// ...
-		return 0;
+
+		int play1 = 0;
+		int play2 = 0;
+		List<Integer> bestplays = new ArrayList<>();
+		int bestPlay;
+
+		// feel free to use these lists for move history.
+		// if you want to look back multiple moves, please make sure you don't go out-of-bounds.
+		switch (myActions.size()) {
+			case 0:
+				Random ran = new Random();
+				return ThreadLocalRandom.current().nextInt(0, 12);
+			case 1:
+				play1 = ((opponent1Actions.get(0) + opponent2Actions.get(0)) / 2) % 12;
+				play2 = (play1 + 6) % 12;
+				bestPlay = (Math.abs(play1 - opponent1Actions.get(0)) > Math.abs(play2 - opponent1Actions.get(0)) ? play1 : play2);
+				return ((Math.abs(myActions.get(0) - bestPlay) + myActions.get(0)) % 12);
+			default:
+				for(int x = myActions.size() - 1; x != 0 && x >= myActions.size() - 3; x--) {
+					play1 = ((opponent1Actions.get(0) + opponent2Actions.get(0)) / 2) % 12;
+					play2 = (play1 + 6) % 12;
+					bestPlay = (Math.abs(play1 - opponent1Actions.get(0)) > Math.abs(play2 - opponent1Actions.get(0)) ? play1 : play2);
+					bestplays.add(0, bestPlay);
+				}
+				int averageChange = 0;
+				for(int y = 0; y < bestplays.size() - 1; y++) {
+					averageChange += bestplays.get(y + 1) - bestplays.get(y);
+				}
+				averageChange = (int) Math.round((double) averageChange / (double) (bestplays.size() - 1));
+				return bestplays.get(bestplays.size() - 1) + averageChange + ThreadLocalRandom.current().nextInt(0, 2) - 1;
+		}
 	}
 	
 	

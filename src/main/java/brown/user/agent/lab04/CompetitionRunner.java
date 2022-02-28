@@ -14,7 +14,7 @@ public class CompetitionRunner {
 		
 		// TODO: comment this out if you did NOT implement MyLemonadeAgent.java,
 		// and instead implemented the RL agent.
-		runRLAgent(args);
+		//runRLAgent(args);
 	}
 	
 	public static void runRLAgent(String[] args) {
